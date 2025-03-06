@@ -1,60 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .hero {
-            background-color: #007bff;
-            color: white;
-            padding: 60px 0;
-            text-align: center;
-        }
-        .feature {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
+@extends('layoutsF.master')
 
-    <header class="hero">
-        <h1>Welcome to Our Store</h1>
-        <p>Your one-stop shop for everything!</p>
-        <a href="#products" class="btn btn-light">Shop Now</a>
-    </header>
+@section('title', 'Home')
 
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Featured Products</h2>
-        <div class="row">
-            @foreach ($products as $product)
-                <div class="col-md-4">
-                    <div class="feature">
-                        <h3>{{ $product->name }}</h3>
-                        <p>{{ $product->description }}</p>
-                        <p><strong>Price: ${{ number_format($product->price, 2) }}</strong></p>
-                        <p>Stock: {{ $product->stock }}</p>
-                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-primary">View Details</a>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+@section('styles')
+<style>
+    .star {
+        color: #ddd;
+        font-size: 1.5rem;
+    }
+
+    .star.filled {
+        color: #f39c12;
+    }
+</style>
+@endsection
+
+@section('content')
+
+<section class="bg-cover bg-center h-96 flex items-center justify-center text-white text-center" style="background-image: url('https://source.unsplash.com/1600x900/?shopping');">
+    <div class="bg-black bg-opacity-50 p-8 rounded-lg">
+        <h1 class="text-5xl font-bold">Welcome My Store</h1>
+        <p class="text-lg mt-2">Find the best products at unbeatable prices!</p>
+        <a href="{{ route('shop') }}" class="mt-4 inline-block bg-yellow-500 text-white py-3 px-6 rounded-full text-lg shadow-lg hover:bg-yellow-600">Shop Now</a>
     </div>
+</section>
 
-    <footer class="text-center py-4">
-        <p>&copy; {{ date('Y') }} Your Company Name. All Rights Reserved.</p>
-    </footer>
+<div id="products" class="container mx-auto mt-12 px-6">
+    <h2 class="text-4xl font-extrabold text-center mb-8 text-gray-800">🔥 Featured Products 🔥</h2>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        @foreach ($products as $product)
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800">{{ $product->name }}</h3>
+                <p class="text-gray-600 mt-2">{{ $product->description }}</p>
+
+                <!-- السعر -->
+                <p class="mt-4 text-2xl font-semibold text-blue-600">${{ number_format($product->price, 2) }}</p>
+                <p class="text-sm text-gray-500">Stock: {{ $product->stock }}</p>
+
+                <!-- نظام التقييم -->
+                <div class="flex items-center mt-3">
+                    @php
+                    $averageRating = $product->reviews()->avg('rating') ?? 0;
+                    $totalStars = 5;
+                    @endphp
+                    @for ($i = 1; $i <= $totalStars; $i++)
+                        <span class="text-yellow-400 text-2xl">{{ $i <= $averageRating ? '★' : '☆' }}</span>
+                    @endfor
+                    <span class="ml-2 text-sm text-gray-600">({{ number_format($averageRating, 1) }})</span>
+                </div>
+
+                <a href="{{ route('products.show', $product->id) }}"
+                    class="block mt-6 text-center bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-bold text-lg shadow-lg hover:from-blue-600 hover:to-purple-700 transition duration-300">
+                    View Details
+                </a>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
+
+@endsection

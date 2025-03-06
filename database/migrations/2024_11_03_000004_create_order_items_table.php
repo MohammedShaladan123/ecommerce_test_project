@@ -10,7 +10,6 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // 2024_11_03_000004_create_order_items_table.php
         Schema::create("order_items", function (Blueprint $table) {
             $table->id();
             $table
@@ -27,9 +26,7 @@ return new class extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+   
     public function down(): void
     {
         Schema::dropIfExists("order_items");
